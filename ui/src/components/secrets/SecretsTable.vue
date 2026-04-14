@@ -384,6 +384,14 @@
         }
     });
 
+    const checkSecretKey = (_rule: any, _value: any, callback: any) => {
+        if (secret.value.key?.updateValue && secret.value.key.value.length > 100) {
+            callback(new Error("Value must be less than 100 characters."));
+        } else {
+            callback();
+        }
+    };
+
     const checkSecretValue = (_rule: any, _value: any, callback: any) => {
         if (secret.value?.updateValue && (secret.value.value === undefined || secret.value.value.length === 0)) {
             callback(new Error("Value must not be empty."));
@@ -416,7 +424,11 @@
 
     const rules = {
         key: [
-            {required: true, trigger: "change"}
+            {
+                validator: checkSecretKey,
+                required: true,
+                trigger: "change"
+            }
         ],
         value: [
             {
